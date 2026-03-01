@@ -9,7 +9,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-1">
             <Link to="/" className="font-serif text-2xl font-bold text-background">
-              Savana<span className="text-accent">·</span>
+              Joining Safaris
             </Link>
             <p className="font-sans text-sm mt-4 text-background/50 leading-relaxed">
               Curated African safari experiences that connect you with the wild.
@@ -59,7 +59,7 @@ const Footer = () => {
 
         <div className="border-t border-background/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="font-sans text-xs text-background/30">
-            © 2025 Savana. All rights reserved.
+            © 2025 Joining Safaris. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <a href="#" className="font-sans text-xs text-background/30 hover:text-background/50 transition-colors">Privacy Policy</a>

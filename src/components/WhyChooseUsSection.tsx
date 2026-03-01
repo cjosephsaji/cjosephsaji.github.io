@@ -35,7 +35,7 @@ const WhyChooseUsSection = () => {
           transition={{ duration: 0.7 }}
           className="text-center mb-16"
         >
-          <p className="safari-label mb-4">Why Savana</p>
+          <p className="safari-label mb-4">Why Joining Safaris</p>
           <h2 className="safari-heading text-3xl md:text-5xl font-bold mb-4">
             Crafted With Intention
           </h2>

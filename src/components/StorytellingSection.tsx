@@ -44,7 +44,7 @@ const StorytellingSection = () => {
             </h2>
             <div className="space-y-5">
               <p className="font-sans text-muted-foreground leading-relaxed">
-                Savana was founded on a simple belief: that encountering Africa's wildlife
+                Joining Safaris was founded on a simple belief: that encountering Africa's wildlife
                 in its natural habitat is one of life's most profound experiences. Every
                 expedition we design is a deeply personal journey — not a tourist itinerary.
               </p>
