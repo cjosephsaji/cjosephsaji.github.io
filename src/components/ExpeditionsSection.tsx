@@ -4,6 +4,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import FindSafariModal from "@/components/FindSafariModal";
 import CompareModal from "@/components/CompareModal";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import serengetiImg from "@/assets/safari-serengeti.jpg";
 import okavango from "@/assets/safari-okavango.jpg";
@@ -46,6 +52,42 @@ const expeditions = [
     price: "From $3,500",
     image: masaiMara,
     budgetTier: "Best Value",
+  },
+  {
+    id: "kruger",
+    title: "Kruger Wilderness Explorer",
+    location: "South Africa",
+    duration: "8 Days",
+    price: "From $4,500",
+    image: serengetiImg,
+    budgetTier: "Mid-Range",
+  },
+  {
+    id: "etosha",
+    title: "Etosha Salt Pans Safari",
+    location: "Namibia",
+    duration: "6 Days",
+    price: "From $3,200",
+    image: okavango,
+    budgetTier: "Best Value",
+  },
+  {
+    id: "bwindi",
+    title: "Bwindi Gorilla Trekking",
+    location: "Uganda",
+    duration: "4 Days",
+    price: "From $5,200",
+    image: kilimanjaro,
+    budgetTier: "Premium",
+  },
+  {
+    id: "south-luangwa",
+    title: "South Luangwa Walking Safari",
+    location: "Zambia",
+    duration: "7 Days",
+    price: "From $4,800",
+    image: masaiMara,
+    budgetTier: "Premium",
   },
 ];
 
@@ -165,78 +207,119 @@ const ExpeditionCard = ({
       className="relative"
     >
       {isRecommended && (
-        <div className="absolute -top-3 left-4 z-10 flex items-center gap-1 bg-accent text-accent-foreground text-xs font-sans font-semibold px-3 py-1 rounded-full shadow-safari">
+        <div className="absolute -top-3 left-4 z-10 flex items-center gap-1 bg-accent text-accent-foreground text-xs font-sans font-semibold px-4 py-1.5 rounded-full shadow-lg border border-accent/20">
           <Sparkles size={12} /> Top Pick For You
         </div>
       )}
-      <Link to="/book" className={`block safari-card group cursor-pointer ${isRecommended ? "ring-2 ring-accent ring-offset-2 ring-offset-background" : ""}`}>
-        <div className="relative overflow-hidden aspect-[3/4]">
+
+      <Link
+        to="/book"
+        className={`block safari-card group cursor-pointer ${isRecommended ? "ring-2 ring-accent ring-offset-2 ring-offset-background" : ""
+          }`}
+      >
+        <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
           <img
             src={expedition.image}
             alt={expedition.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.08]"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
-          {/* Wishlist */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setWishlisted(!wishlisted);
-            }}
-            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-background/20 backdrop-blur-sm flex items-center justify-center transition-all duration-200 hover:bg-background/40"
-          >
-            <Heart
-              size={18}
-              className={`transition-all duration-300 ${
-                wishlisted ? "fill-destructive text-destructive scale-110" : "text-primary-foreground"
-              }`}
-            />
-          </button>
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10 transition-opacity duration-300 group-hover:opacity-90" />
 
-          {/* Compare checkbox */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              onToggleCompare();
-            }}
-            className={`absolute top-4 left-14 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
-              isComparing
-                ? "bg-accent text-accent-foreground"
-                : "bg-background/20 backdrop-blur-sm text-primary-foreground hover:bg-background/40"
-            }`}
-            title="Compare"
-          >
-            <GitCompareArrows size={14} />
-          </button>
-
-          {/* Duration Badge */}
-          <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-background/20 backdrop-blur-sm text-primary-foreground text-xs font-sans font-medium px-3 py-1.5 rounded-full">
-            <Clock size={12} />
+          {/* Top Left: Duration Pill */}
+          <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-black/30 border border-white/20 backdrop-blur-md text-white text-xs font-sans font-medium px-3 py-1.5 rounded-full shadow-lg">
+            <Clock size={12} className="text-white/80" />
             {expedition.duration}
           </div>
 
-          {/* Bottom Info */}
-          <div className="absolute bottom-0 left-0 right-0 p-5">
-            <div className="flex items-center gap-1.5 text-primary-foreground/80 text-xs font-sans mb-2">
-              <MapPin size={12} />
-              {expedition.location}
+          {/* Top Right Actions Pill */}
+          <TooltipProvider delayDuration={200}>
+            <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-black/20 border border-white/10 backdrop-blur-md p-1 rounded-full shadow-lg z-50" onClick={(e) => e.preventDefault()}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setWishlisted(!wishlisted);
+                    }}
+                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all duration-300"
+                  >
+                    <Heart
+                      size={14}
+                      className={`transition-all duration-300 ${wishlisted ? "fill-red-500 text-red-500 scale-110" : "text-white"}`}
+                    />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" sideOffset={8}>
+                  <p>{wishlisted ? "Remove from Wishlist" : "Add to Wishlist"}</p>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onToggleCompare();
+                    }}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${isComparing
+                      ? "bg-accent text-accent-foreground shadow-md"
+                      : "bg-white/10 hover:bg-white/20 text-white"
+                      }`}
+                  >
+                    <GitCompareArrows size={14} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" sideOffset={8}>
+                  <p>{isComparing ? "Remove from Compare" : "Compare"}</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
-            <h3 className="font-serif text-lg font-semibold text-primary-foreground leading-snug">
-              {expedition.title}
-            </h3>
+          </TooltipProvider>
+
+          {/* Bottom Info Overlay */}
+          <div className="absolute inset-x-0 bottom-0 p-5 pt-12 flex flex-col justify-end pointer-events-none">
+            <div className="transform transition-transform duration-300 group-hover:translate-y-[-8px]">
+              <div className="flex items-center gap-1.5 text-white/80 text-xs font-sans font-medium tracking-wide uppercase mb-2">
+                <MapPin size={12} className="text-accent" />
+                {expedition.location}
+              </div>
+              <h3 className="font-serif text-2xl font-bold text-white leading-tight drop-shadow-md">
+                {expedition.title}
+              </h3>
+            </div>
           </div>
         </div>
 
-        <div className="p-5 flex items-center justify-between">
-          <div>
-            <span className="font-sans text-sm text-muted-foreground">{expedition.price}</span>
-            <span className="ml-2 font-sans text-xs text-accent font-medium">{expedition.budgetTier}</span>
+        {/* Card Body */}
+        <div className="p-5 flex items-end justify-between bg-card relative border-t border-border/50 transition-colors duration-300 group-hover:bg-primary/[0.02]">
+          <div className="flex flex-col gap-1.5">
+            <span className="font-sans text-xs text-muted-foreground font-semibold uppercase tracking-wider">
+              {expedition.budgetTier}
+            </span>
+            <span className="font-sans text-xl font-bold text-foreground">
+              {expedition.price}
+            </span>
           </div>
-          <span className="font-sans text-xs font-semibold text-primary tracking-wide uppercase">
-            View Details →
-          </span>
+
+          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 shadow-sm group-hover:shadow-md transform group-hover:-rotate-12">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </div>
         </div>
       </Link>
     </motion.div>

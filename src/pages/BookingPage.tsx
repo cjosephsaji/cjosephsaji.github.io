@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, MapPin, Calendar, Users, ShieldCheck, Lock, Sparkles, ChevronDown } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, MapPin, Calendar, Users, ShieldCheck, Lock, Sparkles, ChevronDown, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -13,19 +13,27 @@ import masaiMara from "@/assets/safari-masai-mara.jpg";
 const steps = ["Destination", "Dates", "Guests", "Summary"];
 
 const destinations = [
-  { id: "serengeti", name: "Serengeti Migration", location: "Tanzania", price: "$4,200", image: serengetiImg },
-  { id: "okavango", name: "Okavango Delta", location: "Botswana", price: "$3,800", image: okavango },
-  { id: "kilimanjaro", name: "Kilimanjaro & Safari", location: "Tanzania", price: "$5,600", image: kilimanjaro },
-  { id: "masai-mara", name: "Masai Mara Big Five", location: "Kenya", price: "$3,500", image: masaiMara },
+  { id: "serengeti", name: "Serengeti Migration", location: "Tanzania", price: "$4,200", image: serengetiImg, aiDescription: "✨ AI Insights: Ranked #1 for witnessing the Great Migration. High predator density." },
+  { id: "okavango", name: "Okavango Delta", location: "Botswana", price: "$3,800", image: okavango, aiDescription: "✨ AI Insights: Unique water-based safaris in mokoros. Exceptional birdwatching." },
+  { id: "kilimanjaro", name: "Kilimanjaro & Safari", location: "Tanzania", price: "$5,600", image: kilimanjaro, aiDescription: "✨ AI Insights: Challenging summit adventure paired with rewarding savanna wildlife." },
+  { id: "masai-mara", name: "Masai Mara Big Five", location: "Kenya", price: "$3,500", image: masaiMara, aiDescription: "✨ AI Insights: Quintessential safari experience. Unmatched year-round big cat sightings." },
+  { id: "kruger", name: "Kruger Wilderness", location: "South Africa", price: "$4,500", image: serengetiImg, aiDescription: "✨ AI Insights: Exceptional infrastructure and one of the best places for guaranteed Big Five encounters." },
+  { id: "etosha", name: "Etosha Salt Pans", location: "Namibia", price: "$3,200", image: okavango, aiDescription: "✨ AI Insights: Striking stark landscapes offering vivid, unobstructed nocturnal wildlife photography." },
+  { id: "bwindi", name: "Bwindi Gorilla Trekking", location: "Uganda", price: "$5,200", image: kilimanjaro, aiDescription: "✨ AI Insights: Deep rainforest trekking for emotional, rare mountain gorilla close encounters." },
+  { id: "south-luangwa", name: "South Luangwa Walking", location: "Zambia", price: "$4,800", image: masaiMara, aiDescription: "✨ AI Insights: The original home of walking safaris; highly immersive, rugged, and intimate." },
 ];
 
 const aiSuggestions: Record<number, Record<string, string>> = {
   0: {
-    default: "🌍 First-timers love the Serengeti — it's the classic African safari experience.",
+    default: "🌍 Searching for the right vibe? Ask about 'Migratory', 'Water', 'Mountain', or 'Walking'.",
     serengeti: "✨ Great choice! June–October is peak migration season for the Serengeti.",
     okavango: "🛶 The Okavango is perfect for a unique water-based safari experience.",
     kilimanjaro: "🏔️ This combo trip is ideal for adventurers seeking both summit and savanna.",
     "masai-mara": "🦁 The Masai Mara offers year-round Big Five sightings — excellent value!",
+    kruger: "🦏 Kruger offers the best infrastructure and accessibility for Big Five sightings.",
+    etosha: "🦓 The sparse vegetation of Etosha makes spotting wildlife significantly easier.",
+    bwindi: "🦍 Trekking permits in Bwindi are highly limited; booking early is critical.",
+    "south-luangwa": "🥾 Get ready for raw thrills — nothing beats being on foot in Luangwa.",
   },
   1: {
     default: "📅 Peak season (Jun–Oct) offers the best wildlife viewing and dry weather.",
@@ -43,11 +51,16 @@ const bestTimeData: Record<string, string> = {
   okavango: "Peak floods July–September create the best water safari conditions.",
   kilimanjaro: "January–March and June–October offer the clearest summit conditions.",
   "masai-mara": "July–October for the wildebeest migration. Year-round for Big Five.",
+  kruger: "May–September is dry season, drawing animals to waterholes.",
+  etosha: "May–October is best, as the dry winter forces wildlife to congregate at permanent water sources.",
+  bwindi: "June–August and December–February for drier trails and better trekking conditions.",
+  "south-luangwa": "July–October is the classic dry-season walking safari window.",
 };
 
 const BookingPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedDest, setSelectedDest] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const [guests, setGuests] = useState({ adults: 2, children: 0 });
   const [showBestTime, setShowBestTime] = useState(false);
@@ -67,6 +80,14 @@ const BookingPage = () => {
   };
 
   const selectedDestination = destinations.find((d) => d.id === selectedDest);
+
+  const filteredDestinations = useMemo(() => {
+    return destinations.filter(d =>
+      d.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      d.aiDescription.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
 
   const aiHint = useMemo(() => {
     const stepSuggestions = aiSuggestions[currentStep];
@@ -116,13 +137,12 @@ const BookingPage = () => {
               {steps.map((step, i) => (
                 <div key={step} className="flex items-center gap-2">
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center font-sans text-sm font-semibold transition-all duration-300 ${
-                      i < currentStep
+                    className={`w-8 h-8 rounded-full flex items-center justify-center font-sans text-sm font-semibold transition-all duration-300 ${i < currentStep
                         ? "bg-primary text-primary-foreground"
                         : i === currentStep
-                        ? "bg-primary text-primary-foreground shadow-safari-gold"
-                        : "bg-muted text-muted-foreground"
-                    }`}
+                          ? "bg-primary text-primary-foreground shadow-safari-gold"
+                          : "bg-muted text-muted-foreground"
+                      }`}
                   >
                     {i < currentStep ? <Check size={14} /> : i + 1}
                   </div>
@@ -154,40 +174,66 @@ const BookingPage = () => {
                   <h2 className="safari-heading text-2xl md:text-3xl font-bold mb-2">
                     Choose Your Destination
                   </h2>
-                  <p className="font-sans text-muted-foreground mb-8">
+                  <p className="font-sans text-muted-foreground mb-6">
                     Select the safari experience that calls to you.
                   </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {destinations.map((d) => (
+
+                  {/* Search Bar */}
+                  <div className="relative mb-6">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                    <input
+                      type="text"
+                      placeholder="Search by name, location, or AI keywords (e.g., 'Big Five', 'Mountain')..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-card border border-border rounded-xl py-3 pl-11 pr-4 text-sm font-sans placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    {filteredDestinations.map((d) => (
                       <button
                         key={d.id}
                         onClick={() => setSelectedDest(d.id)}
-                        className={`relative overflow-hidden rounded-2xl text-left transition-all duration-200 group ${
-                          selectedDest === d.id
-                            ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
-                            : "hover:shadow-safari-lg"
-                        }`}
+                        className={`relative overflow-hidden rounded-2xl text-left transition-all duration-200 group flex flex-col h-full ${selectedDest === d.id
+                            ? "ring-2 ring-primary ring-offset-2 ring-offset-background bg-card"
+                            : "bg-card hover:shadow-safari-lg border border-transparent hover:border-border"
+                          }`}
                       >
-                        <img
-                          src={d.image}
-                          alt={d.name}
-                          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                        <div className="absolute bottom-0 left-0 right-0 p-4">
-                          <div className="flex items-center gap-1 text-primary-foreground/70 text-xs mb-1">
-                            <MapPin size={11} /> {d.location}
+                        <div className="relative aspect-[16/9] w-full shrink-0 overflow-hidden">
+                          <img
+                            src={d.image}
+                            alt={d.name}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                          <div className="absolute bottom-0 left-0 right-0 p-4">
+                            <div className="flex items-center gap-1 text-primary-foreground/90 text-xs mb-1 font-medium">
+                              <MapPin size={11} className="text-secondary" /> {d.location}
+                            </div>
+                            <p className="font-serif text-xl font-semibold text-primary-foreground leading-tight">{d.name}</p>
+                            <p className="font-sans text-sm text-primary-foreground/80 mt-1 font-medium">From {d.price}</p>
                           </div>
-                          <p className="font-serif text-lg font-semibold text-primary-foreground">{d.name}</p>
-                          <p className="font-sans text-sm text-primary-foreground/60 mt-1">From {d.price}</p>
+                          {selectedDest === d.id && (
+                            <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
+                              <Check size={14} />
+                            </div>
+                          )}
                         </div>
-                        {selectedDest === d.id && (
-                          <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
-                            <Check size={14} />
-                          </div>
-                        )}
+                        {/* AI Insight inside card */}
+                        <div className="p-4 bg-primary/[0.03] border-t border-border/50 grow">
+                          <p className="font-sans text-xs text-foreground/80 leading-relaxed">
+                            {d.aiDescription}
+                          </p>
+                        </div>
                       </button>
                     ))}
+                    {filteredDestinations.length === 0 && (
+                      <div className="col-span-full py-10 text-center text-muted-foreground bg-card rounded-2xl border border-dashed border-border flex flex-col items-center gap-2">
+                        <Search size={24} className="text-muted-foreground/50" />
+                        <p>No destinations found matching "{searchQuery}"</p>
+                      </div>
+                    )}
                   </div>
 
                   {/* Best Time To Visit */}
@@ -239,11 +285,10 @@ const BookingPage = () => {
                       <button
                         key={m}
                         onClick={() => setSelectedMonth(m)}
-                        className={`py-4 px-3 rounded-xl font-sans text-sm font-medium transition-all duration-200 ${
-                          selectedMonth === m
+                        className={`py-4 px-3 rounded-xl font-sans text-sm font-medium transition-all duration-200 ${selectedMonth === m
                             ? "bg-primary text-primary-foreground shadow-safari"
                             : "bg-card text-foreground hover:bg-muted border border-border"
-                        }`}
+                          }`}
                       >
                         {m}
                       </button>
@@ -393,24 +438,22 @@ const BookingPage = () => {
             <button
               onClick={back}
               disabled={currentStep === 0}
-              className={`flex items-center gap-2 font-sans text-sm font-medium px-6 py-3 rounded-xl transition-all duration-200 ${
-                currentStep === 0
+              className={`flex items-center gap-2 font-sans text-sm font-medium px-6 py-3 rounded-xl transition-all duration-200 ${currentStep === 0
                   ? "text-muted-foreground cursor-not-allowed"
                   : "text-foreground hover:bg-muted"
-              }`}
+                }`}
             >
               <ArrowLeft size={16} /> Back
             </button>
             <button
               onClick={next}
               disabled={!canProceed()}
-              className={`flex items-center gap-2 font-sans text-sm font-semibold px-8 py-3 rounded-xl transition-all duration-200 ${
-                canProceed()
+              className={`flex items-center gap-2 font-sans text-sm font-semibold px-8 py-3 rounded-xl transition-all duration-200 ${canProceed()
                   ? currentStep === 3
                     ? "bg-accent text-accent-foreground hover:opacity-90 shadow-safari-gold"
                     : "bg-primary text-primary-foreground hover:opacity-90"
                   : "bg-muted text-muted-foreground cursor-not-allowed"
-              }`}
+                }`}
             >
               {currentStep === 3 ? (
                 <>
@@ -440,13 +483,12 @@ const BookingPage = () => {
           <button
             onClick={next}
             disabled={!canProceed()}
-            className={`flex-1 flex items-center justify-center gap-2 font-sans font-semibold py-4 rounded-xl transition-all duration-200 ${
-              canProceed()
+            className={`flex-1 flex items-center justify-center gap-2 font-sans font-semibold py-4 rounded-xl transition-all duration-200 ${canProceed()
                 ? currentStep === 3
                   ? "bg-accent text-accent-foreground"
                   : "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground"
-            }`}
+              }`}
           >
             {currentStep === 3 ? (
               <>
