@@ -5,7 +5,7 @@ const testimonials = [
   {
     name: "Sarah Mitchell",
     location: "London, UK",
-    text: "An absolutely life-changing experience. The guides were extraordinary and every detail was perfect. Savana turned a dream into reality.",
+    text: "An absolutely life-changing experience. The guides were extraordinary and every detail was perfect. Joining Safaris turned a dream into reality.",
     rating: 5,
     initials: "SM",
   },
@@ -19,7 +19,7 @@ const testimonials = [
   {
     name: "Dr. Amara Okafor",
     location: "Lagos, Nigeria",
-    text: "I've traveled extensively across Africa, but Savana's attention to detail and local knowledge is unmatched. A truly premium experience.",
+    text: "I've traveled extensively across Africa, but Joining Safaris' attention to detail and local knowledge is unmatched. A truly premium experience.",
     rating: 5,
     initials: "AO",
   },

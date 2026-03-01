@@ -1,103 +1,137 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Compass } from "lucide-react";
+import { ArrowRight, Compass, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-safari.jpg";
+import FindSafariModal from "@/components/FindSafariModal";
 
 const HeroSection = () => {
+  const [quizOpen, setQuizOpen] = useState(false);
+
+  const handleQuizResult = (recommended: string[]) => {
+    // Scroll to expeditions section and let it highlight
+    const el = document.getElementById("expeditions");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <img
-          src={heroImage}
-          alt="African safari landscape at golden hour"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/60" />
-      </div>
+    <>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src={heroImage}
+            alt="African safari landscape at golden hour"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/60" />
+        </div>
 
-      {/* Content */}
-      <div className="relative z-10 safari-container text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="max-w-4xl mx-auto"
-        >
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="safari-label text-primary-foreground/80 mb-6"
-          >
-            Curated African Expeditions
-          </motion.p>
-
-          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-[1.1] mb-6">
-            Where the Wild
-            <br />
-            <span className="italic font-medium">Meets the Soul</span>
-          </h1>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="text-primary-foreground/80 font-sans text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
-          >
-            Handcrafted safari experiences through Africa's most extraordinary
-            landscapes. Expert guides. Iconic lodges. Unforgettable moments.
-          </motion.p>
-
+        {/* Content */}
+        <div className="relative z-10 safari-container text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="max-w-4xl mx-auto"
           >
-            <a href="#expeditions" className="btn-hero-primary inline-flex items-center gap-2 group">
-              Explore Journeys
-              <ArrowRight size={18} className="transition-transform duration-200 group-hover:translate-x-1" />
-            </a>
-            <Link to="/book" className="btn-hero-secondary inline-flex items-center gap-2">
-              <Compass size={18} />
-              Design My Safari
-            </Link>
-          </motion.div>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="safari-label text-primary-foreground/80 mb-6"
+            >
+              Curated African Expeditions
+            </motion.p>
 
-          {/* Trust Badge */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.3, duration: 0.8 }}
-            className="mt-16 flex items-center justify-center gap-6 text-primary-foreground/60 font-sans text-sm"
-          >
-            <div className="flex items-center gap-2">
-              <span className="text-accent">★★★★★</span>
-              <span>4.9 Google Rating</span>
-            </div>
-            <div className="w-px h-4 bg-primary-foreground/20" />
-            <span>Trusted by 12,000+ travelers</span>
-          </motion.div>
-        </motion.div>
-      </div>
+            <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-[1.1] mb-6">
+              Where the Wild
+              <br />
+              <span className="italic font-medium">Meets the Soul</span>
+            </h1>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              className="text-primary-foreground/80 font-sans text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
+            >
+              Handcrafted safari experiences through Africa's most extraordinary
+              landscapes. Expert guides. Iconic lodges. Unforgettable moments.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.6 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            >
+              <a href="#expeditions" className="btn-hero-primary inline-flex items-center gap-2 group">
+                Explore Journeys
+                <ArrowRight size={18} className="transition-transform duration-200 group-hover:translate-x-1" />
+              </a>
+              <Link to="/book" className="btn-hero-secondary inline-flex items-center gap-2">
+                <Compass size={18} />
+                Design My Safari
+              </Link>
+            </motion.div>
+
+            {/* Find My Perfect Safari */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.1, duration: 0.6 }}
+              className="mt-6"
+            >
+              <button
+                onClick={() => setQuizOpen(true)}
+                className="inline-flex items-center gap-2 font-sans text-sm font-medium text-primary-foreground/70 hover:text-primary-foreground transition-colors duration-200 border border-primary-foreground/20 rounded-full px-6 py-2.5 hover:bg-primary-foreground/10"
+              >
+                <Sparkles size={16} />
+                Find My Perfect Safari
+              </button>
+            </motion.div>
+
+            {/* Trust Badge */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.3, duration: 0.8 }}
+              className="mt-12 flex items-center justify-center gap-6 text-primary-foreground/60 font-sans text-sm"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-accent">★★★★★</span>
+                <span>4.9 Google Rating</span>
+              </div>
+              <div className="w-px h-4 bg-primary-foreground/20" />
+              <span>Trusted by 12,000+ travelers</span>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Scroll Indicator */}
         <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="w-6 h-10 border-2 border-primary-foreground/30 rounded-full flex justify-center pt-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.8 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
         >
-          <div className="w-1 h-2 bg-primary-foreground/50 rounded-full" />
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            className="w-6 h-10 border-2 border-primary-foreground/30 rounded-full flex justify-center pt-2"
+          >
+            <div className="w-1 h-2 bg-primary-foreground/50 rounded-full" />
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </section>
+      </section>
+
+      <FindSafariModal
+        open={quizOpen}
+        onClose={() => setQuizOpen(false)}
+        onResult={handleQuizResult}
+      />
+    </>
   );
 };
 
