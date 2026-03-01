@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Heart, MapPin, Clock, GitCompareArrows, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import FindSafariModal from "@/components/FindSafariModal";
 import CompareModal from "@/components/CompareModal";
@@ -10,92 +10,27 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { InteractiveMap } from "./InteractiveMap";
+import { ProgressiveImage } from "./ui/ProgressiveImage";
 
-import serengetiImg from "@/assets/safari-serengeti.jpg";
-import okavango from "@/assets/safari-okavango.jpg";
-import kilimanjaro from "@/assets/safari-kilimanjaro.jpg";
-import masaiMara from "@/assets/safari-masai-mara.jpg";
+import { expeditions, Expedition } from "@/data/expeditions";
 
-const expeditions = [
-  {
-    id: "serengeti",
-    title: "The Great Serengeti Migration",
-    location: "Tanzania",
-    duration: "7 Days",
-    price: "From $4,200",
-    image: serengetiImg,
-    budgetTier: "Mid-Range",
-  },
-  {
-    id: "okavango",
-    title: "Okavango Delta Discovery",
-    location: "Botswana",
-    duration: "5 Days",
-    price: "From $3,800",
-    image: okavango,
-    budgetTier: "Mid-Range",
-  },
-  {
-    id: "kilimanjaro",
-    title: "Kilimanjaro & Safari Combo",
-    location: "Tanzania",
-    duration: "10 Days",
-    price: "From $5,600",
-    image: kilimanjaro,
-    budgetTier: "Premium",
-  },
-  {
-    id: "masai-mara",
-    title: "Masai Mara Big Five",
-    location: "Kenya",
-    duration: "6 Days",
-    price: "From $3,500",
-    image: masaiMara,
-    budgetTier: "Best Value",
-  },
-  {
-    id: "kruger",
-    title: "Kruger Wilderness Explorer",
-    location: "South Africa",
-    duration: "8 Days",
-    price: "From $4,500",
-    image: serengetiImg,
-    budgetTier: "Mid-Range",
-  },
-  {
-    id: "etosha",
-    title: "Etosha Salt Pans Safari",
-    location: "Namibia",
-    duration: "6 Days",
-    price: "From $3,200",
-    image: okavango,
-    budgetTier: "Best Value",
-  },
-  {
-    id: "bwindi",
-    title: "Bwindi Gorilla Trekking",
-    location: "Uganda",
-    duration: "4 Days",
-    price: "From $5,200",
-    image: kilimanjaro,
-    budgetTier: "Premium",
-  },
-  {
-    id: "south-luangwa",
-    title: "South Luangwa Walking Safari",
-    location: "Zambia",
-    duration: "7 Days",
-    price: "From $4,800",
-    image: masaiMara,
-    budgetTier: "Premium",
-  },
-];
+// Data now imported from @/data/expeditions
 
 const ExpeditionsSection = () => {
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [compareOpen, setCompareOpen] = useState(false);
   const [quizOpen, setQuizOpen] = useState(false);
   const [recommended, setRecommended] = useState<string[]>([]);
+
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const bloomY1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const bloomY2 = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   const toggleCompare = (id: string) => {
     setCompareIds((prev) =>
@@ -107,8 +42,23 @@ const ExpeditionsSection = () => {
 
   return (
     <>
-      <section id="expeditions" className="safari-section bg-background">
-        <div className="safari-container">
+      <section
+        id="expeditions"
+        ref={sectionRef}
+        className="safari-section bg-background topo-pattern relative overflow-hidden"
+      >
+        {/* Light Leak Layer */}
+        <div className="light-leak top-0 left-0 w-full h-[800px] opacity-40 translate-x-[-20%] translate-y-[-20%]" />
+
+        {/* Cinematic Bloom Background Accent */}
+        <motion.div
+          style={{ y: bloomY1 }}
+          className="absolute top-0 right-0 w-[500px] h-[500px] bg-bloom-gold -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-60" />
+        <motion.div
+          style={{ y: bloomY2 }}
+          className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-bloom-forest translate-y-1/2 -translate-x-1/2 pointer-events-none opacity-30" />
+
+        <div className="safari-container relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -144,7 +94,7 @@ const ExpeditionsSection = () => {
             </div>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {expeditions.map((exp, i) => (
               <ExpeditionCard
                 key={exp.title}
@@ -156,6 +106,19 @@ const ExpeditionsSection = () => {
               />
             ))}
           </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7 }}
+            className="mt-16"
+          >
+            <h3 className="font-serif text-3xl font-bold text-center mb-8">
+              Explore Across the Continent
+            </h3>
+            <InteractiveMap />
+          </motion.div>
         </div>
       </section>
 
@@ -173,15 +136,7 @@ const ExpeditionsSection = () => {
   );
 };
 
-interface Expedition {
-  id: string;
-  title: string;
-  location: string;
-  duration: string;
-  price: string;
-  image: string;
-  budgetTier: string;
-}
+// Interface now imported from @/data/expeditions
 
 const ExpeditionCard = ({
   expedition,
@@ -213,16 +168,16 @@ const ExpeditionCard = ({
       )}
 
       <Link
-        to="/book"
+        to={`/tour/${expedition.id}`}
         className={`block safari-card group cursor-pointer ${isRecommended ? "ring-2 ring-accent ring-offset-2 ring-offset-background" : ""
           }`}
       >
         <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
-          <img
+          <ProgressiveImage
             src={expedition.image}
             alt={expedition.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.08]"
-            loading="lazy"
+            className="transition-transform duration-700 group-hover:scale-[1.08]"
+            placeholderColor="bg-muted"
           />
 
           {/* Gradient Overlay */}

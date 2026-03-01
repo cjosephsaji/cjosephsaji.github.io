@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import Tilt from "react-parallax-tilt";
 
 const testimonials = [
   {
@@ -27,7 +28,10 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section id="testimonials" className="safari-section bg-muted/50">
+    <section id="testimonials" className="safari-section bg-muted/50 topo-pattern relative overflow-hidden">
+      {/* Light Leak Layer */}
+      <div className="light-leak top-1/2 right-0 w-[600px] h-[600px] opacity-20 translate-x-[30%]" />
+
       <div className="safari-container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -53,27 +57,34 @@ const TestimonialsSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.15 }}
-              className="bg-card rounded-2xl p-8 shadow-safari"
             >
-              <div className="flex items-center gap-1 mb-4">
-                {Array.from({ length: t.rating }).map((_, j) => (
-                  <Star key={j} size={14} className="fill-accent text-accent" />
-                ))}
-              </div>
-              <p className="font-sans text-foreground/80 leading-relaxed mb-6 italic">
-                "{t.text}"
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="font-serif text-sm font-semibold text-primary">
-                    {t.initials}
-                  </span>
+              <Tilt
+                tiltMaxAngleX={5}
+                tiltMaxAngleY={5}
+                scale={1.02}
+                transitionSpeed={2000}
+                className="bg-card/60 backdrop-blur-md rounded-2xl p-8 shadow-safari h-full border border-white/20"
+              >
+                <div className="flex items-center gap-1 mb-4">
+                  {Array.from({ length: t.rating }).map((_, j) => (
+                    <Star key={j} size={14} className="fill-accent text-accent" />
+                  ))}
                 </div>
-                <div>
-                  <p className="font-sans text-sm font-semibold text-foreground">{t.name}</p>
-                  <p className="font-sans text-xs text-muted-foreground">{t.location}</p>
+                <p className="font-sans text-foreground/80 leading-relaxed mb-6 italic">
+                  "{t.text}"
+                </p>
+                <div className="flex items-center gap-3 mt-auto">
+                  <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span className="font-serif text-sm font-semibold text-primary">
+                      {t.initials}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="font-sans text-sm font-semibold text-foreground">{t.name}</p>
+                    <p className="font-sans text-xs text-muted-foreground">{t.location}</p>
+                  </div>
                 </div>
-              </div>
+              </Tilt>
             </motion.div>
           ))}
         </div>

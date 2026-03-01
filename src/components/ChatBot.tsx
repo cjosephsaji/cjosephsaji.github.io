@@ -22,7 +22,7 @@ const SUGGESTED_QUESTIONS = [
 const BOT_RESPONSES = [
     "That sounds like an amazing journey! The Great Migration is best seen between June and October.",
     "For families, we highly recommend the Masai Mara or Kruger, as they have fantastic child-friendly lodges and easy wildlife viewing.",
-    "Our most budget-friendly option is the Etosha Salt Pans Safari, which offers incredible value and stark, beautiful landscapes for just $3,200.",
+    "Our most budget-friendly option is the Etosha Salt Pans Safari, which offers incredible value and stark, beautiful landscapes for just ₹3,200.",
     "I'm an AI, so I'm still learning! But our human safari experts would love to chat with you about that.",
 ];
 

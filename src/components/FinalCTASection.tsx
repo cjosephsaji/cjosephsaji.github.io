@@ -4,8 +4,13 @@ import { Link } from "react-router-dom";
 
 const FinalCTASection = () => {
   return (
-    <section className="safari-section bg-primary text-primary-foreground">
-      <div className="safari-container text-center">
+    <section className="safari-section bg-primary text-primary-foreground topo-pattern relative overflow-hidden">
+      {/* Light Leak Layer */}
+      <div className="light-leak bottom-0 left-0 w-[900px] h-[900px] opacity-50 translate-x-[-30%] translate-y-[30%]" />
+
+      {/* Cinematic Bloom Accents */}
+      <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-bloom-gold -translate-y-1/2 -translate-x-1/2 pointer-events-none opacity-40 blur-3xl animate-pulse-slow" />
+      <div className="safari-container relative z-10 text-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

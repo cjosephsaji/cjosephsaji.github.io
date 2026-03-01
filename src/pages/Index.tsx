@@ -6,19 +6,22 @@ import StorytellingSection from "@/components/StorytellingSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FinalCTASection from "@/components/FinalCTASection";
 import Footer from "@/components/Footer";
+import { PageTransition } from "@/components/ui/PageTransition";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <HeroSection />
-      <ExpeditionsSection />
-      <WhyChooseUsSection />
-      <StorytellingSection />
-      <TestimonialsSection />
-      <FinalCTASection />
-      <Footer />
-    </div>
+    <PageTransition>
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <HeroSection />
+        <ExpeditionsSection />
+        <WhyChooseUsSection />
+        <StorytellingSection />
+        <TestimonialsSection />
+        <FinalCTASection />
+        <Footer />
+      </div>
+    </PageTransition>
   );
 };
 

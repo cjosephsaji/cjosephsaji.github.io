@@ -1,10 +1,34 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import lodgeImage from "@/assets/storytelling-lodge.jpg";
 
 const StorytellingSection = () => {
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const bloomY1 = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const bloomY2 = useTransform(scrollYProgress, [0, 1], [0, 80]);
+
   return (
-    <section id="stories" className="safari-section bg-background overflow-hidden">
-      <div className="safari-container">
+    <section id="stories" ref={sectionRef} className="safari-section bg-background topo-pattern relative overflow-hidden">
+      {/* Light Leak Layer */}
+      <div className="light-leak bottom-0 left-0 w-[700px] h-[700px] opacity-25 translate-x-[-10%] translate-y-[20%]" />
+      <div className="light-leak top-0 right-0 w-[800px] h-[800px] opacity-30 translate-x-[20%] translate-y-[-10%]" />
+
+      {/* Cinematic Bloom Accents */}
+      <motion.div
+        style={{ y: bloomY1 }}
+        className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-bloom-forest -translate-x-1/3 pointer-events-none opacity-40 blur-3xl"
+      />
+      <motion.div
+        style={{ y: bloomY2 }}
+        className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-bloom-gold translate-x-1/3 pointer-events-none opacity-20 blur-3xl"
+      />
+
+      <div className="safari-container relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* Image */}
           <motion.div
